@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 313480177bf520245bc0987139f68ed6, type: 3}
+  m_Name: CrazyFire
+  m_EditorClassIdentifier: 
+  serialNum: 1901
+  cardName_JP: "\u72C2\u7344\u306E\u707C\u7768"
+  cardName_EN: 
+  CardIllust: {fileID: 21300000, guid: 0a10a410edadec247a328648072d8d53, type: 3}
+  JobName:
+  - Jobname: 18
+  effectList:
+  - cardEffect: 1
+    value: 20
+  - cardEffect: 3
+    value: 2
+  cost: 2
+  CardType:
+  - Cardtype: 3

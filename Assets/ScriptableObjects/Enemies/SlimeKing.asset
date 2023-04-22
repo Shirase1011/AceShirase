@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3783e7acda9d30640aa8048594bc2165, type: 3}
+  m_Name: SlimeKing
+  m_EditorClassIdentifier: 
+  enemyName_JP: "\u30B9\u30E9\u30A4\u30E0\u30AD\u30F3\u30B0"
+  enemyName_EN: Slime King
+  charaSprite: {fileID: 21300000, guid: b3989f3389e4fc445aadcc5c2a8b6983, type: 3}
+  maxHP: 200
+  useEnemyCardDatas:
+  - {fileID: 11400000, guid: 50efaef08e5799f4897e29e6812af351, type: 2}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 50efaef08e5799f4897e29e6812af351, type: 2}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 50efaef08e5799f4897e29e6812af351, type: 2}
+  bonusOptions: 0
+  bonusPoint: 0
+  bonusCardList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
