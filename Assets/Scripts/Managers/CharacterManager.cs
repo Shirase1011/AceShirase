@@ -15,13 +15,12 @@ public class CharacterManager : MonoBehaviour
 	// 敵画像オブジェクト関連
 	[SerializeField] private Transform enemyPictureParent = null;	// 生成した敵オブジェクトの親Transform
 	[SerializeField] private GameObject enemyPicturePrefab = null;	// 敵キャラクター画像Prefab
-	[SerializeField] private GameObject enemyStatusBarPrefab = null;
-	[SerializeField] private Transform enemyStatusBarsParent = null;
+	[SerializeField] private GameObject enemyStatusUIPrefab = null; // 敵ステータスUIのPrefabを追加
+	private List<StatusUI> enemyStatusUIList = new List<StatusUI>(); // 敵ステータスUIを格納するリストを追加
 	private EnemyPicture enemyPicture; // 出現中の敵オブジェクト処理クラス
 
 	// ステータスUI処理クラス
 	[SerializeField] private StatusUI playerStatusUI = null;// プレイヤーステータス
-	[SerializeField] private StatusUI enemyStatusUI = null; // 敵ステータス
 
 	// エネミーデータ
 	[HideInInspector] public EnemyStatusSO enemyData; // 敵定義データ(戦闘中ここは変更しない)
@@ -55,7 +54,10 @@ public class CharacterManager : MonoBehaviour
 
 		// UI初期化
 		playerStatusUI.SetHPView (nowHP[Card.CharaID_Player], maxHP[Card.CharaID_Player]);
-		enemyStatusUI.HideCanvasGroup (false); // 敵ステータスを非表示(アニメーションなし)
+    	foreach (StatusUI enemyStatus in enemyStatusUIList)
+    	{
+    	    enemyStatus.HideCanvasGroup(false);
+    	}
 	}
 
 	/// <summary>
@@ -116,7 +118,10 @@ public class CharacterManager : MonoBehaviour
 		if (charaID == Card.CharaID_Player)
 			playerStatusUI.SetHPView (nowHP[charaID], maxHP[charaID]);
 		else
-			enemyStatusUI.SetHPView (nowHP[charaID], maxHP[charaID]);
+		{
+			int enemyIndex = charaID - Card.CharaID_Enemy; // 敵のインデックスを取得
+			enemyStatusUIList[enemyIndex].SetHPView (nowHP[charaID], maxHP[charaID]);	// 対応する敵ステータスUIを更新
+		}
 		// (敵専用)ダメージ演出
 		if (charaID == Card.CharaID_Enemy)
 		{
@@ -149,7 +154,10 @@ public class CharacterManager : MonoBehaviour
 		if (charaID == Card.CharaID_Player)
 			playerStatusUI.SetHPView (nowHP[charaID], maxHP[charaID]);
 		else
-			enemyStatusUI.SetHPView (nowHP[charaID], maxHP[charaID]);
+		{
+			int enemyIndex = charaID - Card.CharaID_Enemy; // 敵のインデックスを取得
+			enemyStatusUIList[enemyIndex].SetHPView (nowHP[charaID], maxHP[charaID]); // 対応する敵ステータスUIを更新
+		}
 		// (敵専用)ダメージ演出
 		if (charaID == Card.CharaID_Enemy)
 		{
@@ -178,26 +186,29 @@ public class CharacterManager : MonoBehaviour
 
 		// 敵画像オブジェクト作成
 		var obj = Instantiate (enemyPicturePrefab, enemyPictureParent);
+		// 敵ステータスUIの取得
+		StatusUI newEnemyStatusUI = obj.GetComponentInChildren<StatusUI>(); // この行を変更
+	    // 敵ステータスUIをリストに追加
+    	enemyStatusUIList.Add(newEnemyStatusUI);
 		// 敵画像処理クラス取得
 		enemyPicture = obj.GetComponent<EnemyPicture> ();
 		// 敵画像処理クラス初期化
 		enemyPicture.Init (this, enemyData.charaSprite);
-    	// 敵ステータスバー生成
-    	var statusBarObj = Instantiate(enemyStatusBarPrefab, enemyStatusBarsParent);
+
     	// 敵ステータスUI処理クラス取得
 
 		// 敵ステータスUI表示
-		enemyStatusUI.ShowCanvasGroup ();
-		enemyStatusUI.SetHPView (nowHP[Card.CharaID_Enemy], maxHP[Card.CharaID_Enemy]);
+		newEnemyStatusUI.ShowCanvasGroup ();
+		newEnemyStatusUI.SetHPView (nowHP[Card.CharaID_Enemy], maxHP[Card.CharaID_Enemy]);
 	}
 
     public void SpawnAllEnemies(EncountEnemyGroupsSO encountEnemyGroups)
     {
-		List<EnemyStatusSO> encountEnemies = encountEnemyGroups.EncountEnemies;
-        foreach (EnemyStatusSO spawnEnemyData in encountEnemies)
-        {
-            SpawnEnemy(spawnEnemyData);
-        }
+    	List<EnemyStatusSO> encountEnemies = encountEnemyGroups.EncountEnemies;
+    	for (int i = 0; i < encountEnemies.Count; i++)
+    	{
+    	    SpawnEnemy(encountEnemies[i]);
+    	}
     }
 
 	/// <summary>
