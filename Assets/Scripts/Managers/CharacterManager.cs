@@ -16,7 +16,9 @@ public class CharacterManager : MonoBehaviour
 	[SerializeField] private Transform enemyPictureParent = null;	// 生成した敵オブジェクトの親Transform
 	[SerializeField] private GameObject enemyPicturePrefab = null;	// 敵キャラクター画像Prefab
 	[SerializeField] private GameObject enemyStatusUIPrefab = null; // 敵ステータスUIのPrefabを追加
+	[SerializeField] private DammyEnemyUI dammyEnemyUI = null;      // ダミーエネミーUIの参照を追加
 	private List<StatusUI> enemyStatusUIList = new List<StatusUI>(); // 敵ステータスUIを格納するリストを追加
+	private List<EnemyPicture> enemyPictureList = new List<EnemyPicture>(); // 敵画像処理クラスのリストを追加
 	private EnemyPicture enemyPicture; // 出現中の敵オブジェクト処理クラス
 
 	// ステータスUI処理クラス
@@ -51,6 +53,7 @@ public class CharacterManager : MonoBehaviour
 		nowSield = new int[Card.CharaNum];
 		ResetHP_Player ();
         encountEnemies = enemyGroups.EncountEnemies;
+		dammyEnemyUI.SetEnemyNum(encountEnemies.Count);  // ダミーエネミーの数を設定
 
 		// UI初期化
 		playerStatusUI.SetHPView (nowHP[Card.CharaID_Player], maxHP[Card.CharaID_Player]);
@@ -185,11 +188,13 @@ public class CharacterManager : MonoBehaviour
 		maxHP[Card.CharaID_Enemy] = enemyData.maxHP;
 
 		// 敵画像オブジェクト作成
-		var obj = Instantiate (enemyPicturePrefab, enemyPictureParent);
+		var obj = Instantiate (enemyPicturePrefab, dammyEnemyUI.GetDammyEnemyPosition(enemyPictureList.Count), Quaternion.identity, enemyPictureParent);
 		// 敵ステータスUIの取得
 		StatusUI newEnemyStatusUI = obj.GetComponentInChildren<StatusUI>(); // この行を変更
 	    // 敵ステータスUIをリストに追加
     	enemyStatusUIList.Add(newEnemyStatusUI);
+	    // 敵画像処理クラスリストに追加
+    	enemyPictureList.Add(obj.GetComponent<EnemyPicture>());
 		// 敵画像処理クラス取得
 		enemyPicture = obj.GetComponent<EnemyPicture> ();
 		// 敵画像処理クラス初期化
@@ -217,7 +222,11 @@ public class CharacterManager : MonoBehaviour
 	public void DeleteEnemy ()
 	{
         // オブジェクト削除
-		Destroy (enemyPicture.gameObject);
+    	for (int i = 0; i < enemyPictureList.Count; i++)
+    	{
+    	    Destroy(enemyPictureList[i].gameObject);
+    	}
+    	enemyPictureList.Clear();
 	}
 	#endregion
 
